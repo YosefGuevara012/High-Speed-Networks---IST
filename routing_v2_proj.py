@@ -431,20 +431,20 @@ def printResults (ordered_paths:list, adj_matrix:list,load_matrix: list,distance
     for p in ordered_paths:
         if p['routed'] == True:
             if path_matrix[p['source']-1][p['destination']-1] != 0:
-                print("Path: {} , Dist: {} , Og.Dist: {} , traffic = {} (Og. Path: {})".format(path_matrix[p['source']-1][p['destination']-1],
+                print("Path: {} ; Dist: {} ; Og.Dist: {} ; traffic = {} (Og. Path: {})".format(path_matrix[p['source']-1][p['destination']-1],
                                                                                                        distance_matrix[p['source']-1][p['destination']-1],
                                                                                                        p['distance'], traffic[p['source']-1][p['destination']-1],p['path']))
             elif path_matrix[p['source']-1][p['destination']-1] == 0:
-                print("Path: BLOCKED , Dist: BLOCKED , Og.Dist: {} , traffic = {} (Og. Path: {})".format(p['distance'],traffic[p['source']-1][p['destination']-1],p['path']))
+                print("Path: BLOCKED ; Dist: BLOCKED ; Og.Dist: {} ; traffic = {} (Og. Path: {})".format(p['distance'],traffic[p['source']-1][p['destination']-1],p['path']))
             p['routed'] = False
         for p2 in ordered_paths:
             if p2['source'] == p['destination'] and p2['destination'] == p['source'] and p['traffic'] == p2['traffic'] and p2['routed'] == True:
                 if path_matrix[p2['source']-1][p2['destination']-1] != 0:
-                    print("Path: {} , Dist: {} , Og.Dist: {} , traffic = {} (Og. Path: {})".format(path_matrix[p2['source']-1][p2['destination']-1],
+                    print("Path: {} ; Dist: {} ; Og.Dist: {} ; traffic = {} (Og. Path: {})".format(path_matrix[p2['source']-1][p2['destination']-1],
                                                                                                      distance_matrix[p2['source']-1][p2['destination']-1], p2['distance'],
                                                                                                      traffic[p2['source']-1][p2['destination']-1],p2['path']))
                 elif path_matrix[p2['source']-1][p2['destination']-1] == 0:
-                    print("Path: BLOCKED , Dist: BLOCKED , Og.Dist: {} , traffic = {} (Og. Path: {})".format(p2['distance'],traffic[p2['source']-1][p2['destination']-1],p2['path']))
+                    print("Path: BLOCKED ; Dist: BLOCKED ; Og.Dist: {} ; traffic = {} (Og. Path: {})".format(p2['distance'],traffic[p2['source']-1][p2['destination']-1],p2['path']))
                 #print("Path: {} -> traffic = {}".format(path_matrix[p2['source']-1][p2['destination']-1],traffic[p2['source']-1][p2['destination']-1]))
                 p2['routed'] = False 
    
@@ -496,22 +496,24 @@ number_of_hops_per_demand = []
 diameter = []
 
 # Default value for the link capacity (999999 corresponds to uncapacitated routing)
-MAX_LINK_CAP = 999999
+# MAX_LINK_CAP = 999999
 #MAX_LINK_CAP = 64
 #MAX_LINK_CAP = 75
 #------------------------------------INPUT MATRICES HERE------------------------------------------------
 # If traffic matrix is not defined, the routing will be done using a full-mesh logical topology with
 # one unit of traffic.
 #TEST NETWORK
-MAX_LINK_CAP = 5
-matrix = [[0,10,10,30,0,0,0,0],
-          [10,0,10,0,0,30,20,0],
-          [10,10,0,10,10,0,40,0],
-          [30,0,10,0,0,0,0,0],
-          [0,0,10,0,0,0,0,20],
-          [0,30,0,0,0,0,10,0],
-          [0,20,40,0,0,10,0,10],
-          [0,0,0,0,20,0,10,0]]
+# MAX_LINK_CAP = 5
+# matrix = [[0,10,10,30,0,0,0,0],
+#           [10,0,10,0,0,30,20,0],
+#           [10,10,0,10,10,0,40,0],
+#           [30,0,10,0,0,0,0,0],
+#           [0,0,10,0,0,0,0,20],
+#           [0,30,0,0,0,0,10,0],
+#           [0,20,40,0,0,10,0,10],
+#           [0,0,0,0,20,0,10,0]]
+
+
 '''traffic = [[0, 10, 10, 10, 10, 10, 10, 10], 
            [10, 0, 1, 1, 1, 1, 1, 1], 
            [10, 1, 0, 1, 1, 1, 1, 1], 
@@ -539,6 +541,66 @@ matrix = [[0,10,10,30,0,0,0,0],
           [91.55,79.97,0.00,144.81,124.85,0.00,144.93],
           [163.30,114.80,104.33,114.30,110.11,144.93,0.00]]
 '''
+
+#-------------------------- My Parameters ----------------------------------------------
+
+
+# Distnace matrix after apply the distance factor
+
+MAX_LINK_CAP = 9999
+
+# Weighted graph matrix  (Aw)
+matrix =   [[0.0, 1027.62, 1542.29, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3760.06],
+            [1027.62, 0.0, 1433.03, 525.57, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [1542.29, 1433.03, 0.0, 0.0, 1389.04, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 525.57, 0.0, 0.0, 0.0, 2073.89, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 1389.04, 0.0, 0.0, 1424.86, 464.88, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 2073.89, 1424.86, 0.0, 0.0, 1060.57, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 464.88, 0.0, 0.0, 0.0, 0.0, 541.71, 610.86, 831.36],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 1060.57, 0.0, 0.0, 820.37, 1006.71, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 820.37, 0.0, 186.47, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 541.71, 1006.71, 186.47, 0.0, 121.84, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 610.86, 0.0, 0.0, 121.84, 0.0, 287.74],
+            [3760.06, 0.0, 0.0, 0.0, 0.0, 0.0, 831.36, 0.0, 0.0, 0.0, 287.74, 0.0]]
+
+# Unweighted graph matrix (Au)
+# matrix =   [[0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+#             [1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+#             [1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+#             [0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+#             [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+#             [0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+#             [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0],
+#             [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0],
+#             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
+#             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0],
+#             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0],
+#             [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]]
+
+# Defines the traffic matrix as a list of lists (each inner list represents a row in the matrix)
+
+
+
+# X = 40
+# Y = 46
+# Z = 59
+
+# X = 1
+# Y = 1
+# Z = 1
+
+# traffic = [ [0, X, Y, Z, X, Y, 0, X, Y, 0, X, Z],
+#             [X, 0, X, Y, X, 0, Z, 0, X, Y, 0, Z],
+#             [Y, X, 0, X, Y, 0, Z, X, Y, 0, X, Z],
+#             [Z, Y, X, 0, Y, X, Z, X, 0, X, Y, Z],
+#             [X, X, Y, Y, 0, X, Z, 0, X, Y, 0, Z],
+#             [Y, 0, 0, X, X, 0, Z, X, 0, Y, 0, Z],
+#             [0, Z, Z, Z, Z, Z, 0, Z, X, 0, Z, Y],
+#             [X, 0, X, X, 0, X, Z, 0, Z, 0, X, Y],
+#             [Y, X, Y, 0, X, 0, X, Z, 0, X, Z, Y],
+#             [0, Y, 0, X, Y, Y, 0, 0, X, 0, X, Y],
+#             [X, 0, X, Y, 0, 0, Z, X, Z, X, 0, Y],
+#             [Z, Z, Z, Z, Z, Z, Y, Y, Y, Y, Y, 0]]
 
 
 #------------------------ INPUT SORTING ORDER----------------------------------------------
